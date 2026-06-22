@@ -351,12 +351,16 @@ h1 {
   border-color: #ded7cb;
   background: var(--seat-disabled);
   color: #b4a995;
-  cursor: not-allowed;
+  cursor: pointer;
 }
 
 .seat-cell.seat-disabled::after {
   content: "×";
   font-size: 16px;
+}
+
+.seat-cell.seat-fixed {
+  cursor: not-allowed;
 }
 
 .seat-cell.aisle-right,
