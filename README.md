@@ -11,6 +11,6 @@
 - 本机自动保存、JSON 备份与恢复
 - 生成座位表图片，支持安装为 PWA
 
-## 部署
+## 直接使用
 
-仓库使用静态文件，无需服务器和付费服务。上传到 GitHub 后，在仓库 `Settings -> Pages` 中选择 `Deploy from a branch`，分支选择 `main`，目录选择 `/root` 即可。
+浏览器打开 https://zceason1.github.io/Classroom-Seating 即可立即使用
