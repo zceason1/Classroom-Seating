@@ -69,6 +69,15 @@ export function isSeatAvailable(seatStates, row, col) {
   return seatStates[row]?.[col] !== 'disabled';
 }
 
+export function isStructuralUnavailable(row, col) {
+  return col === COLS - 1 && !COL9_AVAILABLE_ROWS.includes(row);
+}
+
+export function isSeatStateEditable(seatStates, row, col) {
+  if (col < 0 || col >= COLS || row < 0 || row >= seatStates.length) return false;
+  return !isStructuralUnavailable(row, col);
+}
+
 export function getAvailableSeats(seatStates) {
   const seats = [];
   for (let row = 0; row < seatStates.length; row += 1) {
