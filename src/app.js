@@ -11,6 +11,8 @@ import {
   cycleSeatState,
   getAvailableSeats,
   isSeatAvailable,
+  isSeatStateEditable,
+  isStructuralUnavailable,
   normalizeClassroom,
   parseStudentNames,
 } from './core.js';
@@ -167,6 +169,7 @@ function renderSeat(row, col) {
   const cell = document.createElement('button');
   const state = classroom.seatStates[row]?.[col] || 'normal';
   const available = isSeatAvailable(classroom.seatStates, row, col);
+  const stateEditable = isSeatStateEditable(classroom.seatStates, row, col);
   const name = seatName(row, col) || '';
   cell.type = 'button';
   cell.className = 'seat-cell';
@@ -177,14 +180,20 @@ function renderSeat(row, col) {
   cell.title = `${row + 1}排${col + 1}列：${name || '空位'}`;
   if ([1, 3, 5].includes(col)) cell.classList.add('aisle-right');
 
-  if (!available || state === 'disabled') {
+  if (!stateEditable) {
     cell.classList.add('seat-disabled');
+    cell.classList.add('seat-fixed');
     cell.disabled = true;
-    cell.title = '禁用座位';
+    cell.title = '固定不可用座位';
     return cell;
   }
 
-  if (state === 'locked') {
+  if (state === 'disabled') {
+    cell.classList.add('seat-disabled');
+    cell.setAttribute('aria-label', `${row + 1}排${col + 1}列：禁用，按住 Ctrl 或 Command 点击可恢复`);
+    cell.innerHTML = `<span class="seat-number">${row + 1}-${col + 1}</span>`;
+    cell.title = `${row + 1}排${col + 1}列：禁用。按住 Ctrl 或 Command 点击可恢复`;
+  } else if (state === 'locked') {
     cell.classList.add('seat-locked');
     cell.innerHTML = `<span class="lock-icon">锁</span><span class="student-name">${escapeHTML(name)}</span>`;
     cell.title += '（锁定）';
@@ -278,6 +287,8 @@ function handleCellClick(event) {
   const row = Number.parseInt(this.dataset.row, 10);
   const col = Number.parseInt(this.dataset.col, 10);
 
+  if (isStructuralUnavailable(row, col)) return;
+
   if (event.ctrlKey || event.metaKey) {
     const nextState = cycleSeatState(classroom.seatStates[row][col]);
     classroom.seatStates[row][col] = nextState;
@@ -286,6 +297,11 @@ function handleCellClick(event) {
     pushHistory();
     renderAll();
     showToast('座位状态已更新');
+    return;
+  }
+
+  if (classroom.seatStates[row]?.[col] === 'disabled') {
+    showToast('禁用座位需按住 Ctrl 或 Command 点击恢复');
     return;
   }
 
