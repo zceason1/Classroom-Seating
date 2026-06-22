@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#4a7c59">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="座位表">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>教室座位表</title>
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./src/styles.css?v=20260622">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="workspace" aria-labelledby="pageTitle">
+        <header class="app-header">
+          <div class="title-group">
+            <p class="eyebrow">本地保存 · 不上传数据</p>
+            <h1 id="pageTitle">教室座位表</h1>
+            <span class="subtitle" id="seatCountLabel">6排×9列 · 50座</span>
+          </div>
+          <div class="header-actions" aria-label="主要操作">
+            <button class="mode-toggle active" id="modeToggle" type="button">
+              <span>编辑</span>
+              <span class="toggle-indicator" aria-hidden="true"></span>
+            </button>
+            <button class="btn" id="importBtn" type="button">导入名单</button>
+            <button class="btn" id="exampleBtn" type="button">示例名单</button>
+            <button class="btn" id="restoreBtn" type="button">恢复备份</button>
+            <button class="btn" id="backupBtn" type="button">备份</button>
+            <button class="btn" id="imageBtn" type="button">图片</button>
+            <button class="icon-btn" id="undoBtn" type="button" title="撤销" aria-label="撤销" disabled>↶</button>
+            <button class="icon-btn" id="redoBtn" type="button" title="重做" aria-label="重做" disabled>↷</button>
+            <button class="icon-btn danger" id="resetBtn" type="button" title="重置" aria-label="重置">×</button>
+            <input id="restoreFileInput" type="file" accept="application/json,.json" hidden>
+          </div>
+        </header>
+
+        <section class="notice" id="firstUseNotice">
+          <strong>首次使用请先导入学生名单。</strong>
+          页面默认不包含真实学生姓名；需要演示时可点“示例名单”，只会填入张三、李四、王五等虚拟姓名。
+        </section>
+
+        <div class="info-bar" id="infoBar">
+          <span><span class="dot dot-editing"></span> <span id="modeLabel">编辑模式</span></span>
+          <span class="sep">|</span>
+          <span id="selectedInfo">未选中</span>
+          <span class="sep">|</span>
+          <span>按住 Ctrl 或 Command 点击座位，可切换正常、锁定、禁用</span>
+        </div>
+
+        <section class="main-content">
+          <div id="exportArea">
+            <div class="podium">讲 台</div>
+            <div class="seating-wrapper">
+              <div class="seating-grid" id="seatingGrid" aria-label="座位表"></div>
+            </div>
+          </div>
+
+          <div class="legend" aria-label="图例">
+            <span class="legend-item"><span class="legend-swatch normal"></span> 正常</span>
+            <span class="legend-item"><span class="legend-swatch locked"></span> 锁定</span>
+            <span class="legend-item"><span class="legend-swatch disabled"></span> 禁用</span>
+            <span class="legend-item"><span class="legend-swatch col9"></span> 第9列</span>
+            <span class="legend-item"><span class="legend-swatch aisle"></span> 过道</span>
+          </div>
+
+          <div class="action-panels" id="actionPanels">
+            <div class="action-group">
+              <span class="action-group-label">排轮换</span>
+              <button class="btn primary" id="rotateRowsForwardBtn" type="button">向后</button>
+              <button class="btn" id="rotateRowsBackwardBtn" type="button">反向</button>
+              <span class="note-text">第9列不动</span>
+            </div>
+            <div class="action-group">
+              <span class="action-group-label">列轮换</span>
+              <button class="btn primary" id="rotateColsForwardBtn" type="button">向后</button>
+              <button class="btn" id="rotateColsBackwardBtn" type="button">反向</button>
+              <span class="note-text">第9列不动</span>
+            </div>
+            <div class="action-group">
+              <span class="action-group-label">第9列</span>
+              <button class="btn" id="swapCol9Btn" type="button">2人互换</button>
+            </div>
+            <div class="action-group">
+              <span class="action-group-label">布局</span>
+              <button class="btn" id="addRowBtn" type="button">加一排</button>
+              <button class="btn" id="removeRowBtn" type="button">删末排</button>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <div id="toastContainer" aria-live="polite"></div>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script type="module" src="./src/app.js?v=20260622"></script>
+  </body>
+</html>
