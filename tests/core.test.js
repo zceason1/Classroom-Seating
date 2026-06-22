@@ -9,6 +9,7 @@ import {
   buildBackupFilename,
   createEmptyClassroom,
   getAvailableSeats,
+  isSeatStateEditable,
   parseStudentNames,
 } from '../src/core.js';
 
@@ -40,6 +41,15 @@ test('assignStudents can fill imported names in classroom order without shufflin
   assert.equal(assigned.seatingData[0][1], '学生乙');
   assert.equal(assigned.seatingData[0][2], '学生丙');
   assert.equal(assigned.seatingData.flat().filter(Boolean).length, 3);
+});
+
+test('manual disabled seats remain editable while structural unavailable seats stay fixed', () => {
+  const classroom = createEmptyClassroom();
+
+  classroom.seatStates[0][0] = 'disabled';
+
+  assert.equal(isSeatStateEditable(classroom.seatStates, 0, 0), true);
+  assert.equal(isSeatStateEditable(classroom.seatStates, 0, 8), false);
 });
 
 test('buildBackupFilename uses a stable timestamp and json extension', () => {
